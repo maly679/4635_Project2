@@ -9,6 +9,7 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 	 */
 	private static final long serialVersionUID = 1L;
 	HashMap<String, game_state> game_states = new HashMap<>();
+	String phrase;
 	String clientname;
 	public PhraseGuessingGameServerImpl(String clientname) throws RemoteException {
 		super();
@@ -20,6 +21,9 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 	public String startGame(String player, int number_of_words, int failed_attempt_factor) throws RemoteException {
 		// TODO Auto-generated method stub
 		game_state gs = new game_stateImpl(player);
+		gs.setNumWords(number_of_words);
+		gs.setFailedAttempts(failed_attempt_factor);
+		gs.setPhrase();
 		game_states.put(player, gs);
 		return player;
 	}
@@ -48,30 +52,44 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 		return null;
 	}
 
+	//	@Override
+	//	public String addWord() throws RemoteException {
+	//		// TODO Auto-generated method stub
+	//		return null;
+	//	}
+	//
+	//	@Override
+	//	public String removeWord() throws RemoteException {
+	//		// TODO Auto-generated method stub
+	//		return null;
+	//	}
+	//
+	//	@Override
+	//	public String checkWord() throws RemoteException {
+	//		// TODO Auto-generated method stub
+	//		return null;
+	//	}
+	//	
 	@Override
-	public String addWord() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+	public synchronized String getName(String client) throws RemoteException  {
+		return game_states.get(client).getName();
+	}
+
+	public synchronized String getPhrase(String client) throws RemoteException  {
+		return game_states.get(client).getPhrase();
+	}
+	public synchronized int getNumWords (String client) throws RemoteException {
+
+		return game_states.get(client).getNumWords();
+
 	}
 
 	@Override
-	public String removeWord() throws RemoteException {
+	public int getFailedAttempts(String client) throws RemoteException {
 		// TODO Auto-generated method stub
-		return null;
+		return game_states.get(client).getFailedAttempts();
 	}
 
-	@Override
-	public String checkWord() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-    public synchronized game_state getClient(String client)  {
-        return game_states.get(client);
-    }
-	
-	
-	
+
 
 }
