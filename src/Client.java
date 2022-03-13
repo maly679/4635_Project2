@@ -153,6 +153,9 @@ public class Client {
 		case getPhrase:
 			System.out.println(pggs.getPhrase(clientname));
 			break;
+		case guessLetter:
+			System.out.println(pggs.guessLetter(clientname,));
+			break;
 		default:
 			System.out.println("Illegal command");
 		}

@@ -8,7 +8,7 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 	 */
 	private static final long serialVersionUID = 1L;
 	HashMap<String, game_state> game_states = new HashMap<>();
-	//String phrase;
+	String display_phrase;
 	String clientname;
 	public PhraseGuessingGameServerImpl(String clientname) throws RemoteException {
 		super();
@@ -36,14 +36,15 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 		{
 		if(phrase.charAt(i) == letter)
 		{
+
 			System.out.println("letter correct");
 			//displayString[i] = letter  //update display string
-			
-			//game_states.update(player,game_state.setScore(10)); //- however to update.
+			int score = game_states.get(player).getScore();
+			game_states.get(player).setScore(score + 10);
 
 		}
 		else{
-			
+
 			int guessCount = game_states.get(player).getGuessCount();
 			int failedAttempts = game_states.get(player).getFailedAttempts();
 			System.out.println("letter incorrect");
