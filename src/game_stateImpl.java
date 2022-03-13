@@ -3,7 +3,6 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class game_stateImpl extends UnicastRemoteObject implements game_state {
 
-
 	private String name;
 	private int score;
 	private String phrase;
