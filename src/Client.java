@@ -18,7 +18,7 @@ public class Client {
 
 	static enum CommandName {
 		//        newAccount, getAccount, deleteAccount, deposit, withdraw, balance, quit, help, list, getNumberAccounts, getName, 
-		startGame, quit, help, getGame, getClient, endGame, getNumWords, getFailedAttempts, getPhrase, restartGame, guessLetter,guessPhrase;
+		startGame, quit, help, getGame, getClient, endGame, getNumWords, getFailedAttempts, getPhrase, restartGame, guessLetter,guessPhrase,addWord,removeWord,checkWord;
 	};
 
 	public Client(String clientname) {
@@ -67,8 +67,9 @@ public class Client {
 		int userInputTokenNo = 1;
 		String token = null;
 		String entry = null;
-		
-		
+		String word = null;
+
+
 		while (tokenizer.hasMoreTokens()) {
 			switch (userInputTokenNo) {
 			case 1:
@@ -86,15 +87,30 @@ public class Client {
 			case 3:
 				try {
 					token = tokenizer.nextToken();
-					numWords = Integer.parseInt(token);
 					
+
+
+					numWords = Integer.parseInt(token);
+
 				} catch (NumberFormatException e) {
 					//If the entry is in fact a guessed letter, process it as such. This is determined
 					//through encountering an exception for parsing the input as integer.
+					//System.out.println(commandName.toString());
+					if(commandName.toString().contains("Word"))
+					{
+						System.out.println(commandName.toString());
+						
+						word = token;
+						System.out.println(word);
+					}
+					else
+					{
 					entry = token;
+					}
 					break;
+					
 				}
-				
+
 			case 4:
 				try {
 					failedAttempts = Integer.parseInt(tokenizer.nextToken());
@@ -110,7 +126,7 @@ public class Client {
 			}
 			userInputTokenNo++;
 		}
-		return new Command(commandName, userName, numWords, failedAttempts, entry);
+		return new Command(commandName, userName, numWords, failedAttempts, entry, word);
 	}
 
 	void execute(Command command) throws RemoteException {
@@ -146,6 +162,16 @@ public class Client {
 			clientname = userName;
 			pggs.startGame(userName, command.getNumWords(), command.getFailedAttempts());
 			break;
+		case addWord: 
+			System.out.println(command.getWord());
+			//pggs.addWord(clientname,command.getWord());
+			break;
+		case removeWord:
+			pggs.removeWord(clientname,command.getWord());
+			break;
+		case checkWord:
+			System.out.println(pggs.checkWord(clientname, command.getWord()));
+			break;
 		case getGame:
 			System.out.println(pggs);
 			break;
@@ -167,12 +193,12 @@ public class Client {
 		case guessPhrase:
 			System.out.println(pggs.guessPhrase(clientname,command.getEntry()));
 			break;
-//		case restartGame:
-////			String phrase = pggs.getPhrase(clientname);
-//			pggs.r(userName);
-//			System.out.println("Thanks for playing! Your phrase was " + phrase);
-//			System.exit(0);
-//			break;
+			//		case restartGame:
+			////			String phrase = pggs.getPhrase(clientname);
+			//			pggs.r(userName);
+			//			System.out.println("Thanks for playing! Your phrase was " + phrase);
+			//			System.exit(0);
+			//			break;
 		case endGame:
 			String phrase = pggs.getPhrase(clientname);
 			pggs.endGame(userName);
@@ -190,15 +216,17 @@ public class Client {
 		private int numWords;
 		private int failedAttempts;
 		private String entry;
+		private String word;
 		private CommandName commandName;
 
 
-		public Command(Client.CommandName commandName, String userName, int numWords, int failedAttempts, String entry) {
+		public Command(Client.CommandName commandName, String userName, int numWords, int failedAttempts, String entry, String word) {
 			this.commandName = commandName;
 			this.userName = userName;
 			this.numWords = numWords;
 			this.failedAttempts = failedAttempts;
 			this.entry = entry;
+			this.word = word;
 		}
 
 		public CommandName getCommandName() {
@@ -208,11 +236,11 @@ public class Client {
 		public String getUserName() {
 			return this.userName;
 		}
-		
+
 		public String getEntry() {
 			return this.entry;
 		}
-		
+
 		public int getNumWords() {
 			return this.numWords;
 		}
@@ -220,7 +248,11 @@ public class Client {
 		public int getFailedAttempts() {
 			return this.failedAttempts;
 		}
-
+		
+		public String getWord()
+		{
+			return this.word;
+		}
 
 	}
 

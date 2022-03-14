@@ -159,4 +159,21 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 		return game_states.get(client).getScore();
 	}
 
+	@Override
+	public void addWord(String client, String word) throws RemoteException {
+		
+		
+		game_states.get(client).addWord(word);
+	}
+	
+	public void removeWord(String client, String word) throws RemoteException
+	{
+		game_states.get(client).removeWord(word);
+	}
+
+	@Override
+	public boolean checkWord(String client, String word) throws RemoteException {
+		return game_states.get(client).checkWord(word);
+	}
+
 }

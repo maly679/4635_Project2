@@ -10,6 +10,7 @@ public class game_stateImpl extends UnicastRemoteObject implements game_state {
 	private int numWords;
 	private int failedAttempts;
 	private String display_phrase;
+	WordRepositoryServer wrs = new WordRepositoryServerImpl();
 
 	//private setDisplay_Phrase(String)
 
@@ -35,7 +36,9 @@ public class game_stateImpl extends UnicastRemoteObject implements game_state {
 
 	
 	public void setPhrase() throws RemoteException {
-		WordRepositoryServer wrs = new WordRepositoryServerImpl();
+		
+		
+		
 		this.phrase = wrs.getRandomWord(this.numWords);
 
 		String initialPlay ="";
@@ -50,7 +53,8 @@ public class game_stateImpl extends UnicastRemoteObject implements game_state {
 		setDisplay_phrase(initialPlay + "C "+this.failedAttempts);
 	}
 
-
+	
+	
 	public void setNumWords(int numWords) {
 		this.numWords = numWords;
 			
@@ -93,6 +97,22 @@ public class game_stateImpl extends UnicastRemoteObject implements game_state {
 	public int getFailedAttempts()  {
 		// TODO Auto-generated method stub
 		return this.failedAttempts;
+	}
+
+	@Override
+	public void addWord(String word) throws RemoteException {
+		wrs.addWord(word);
+		
+	}
+	
+	public void removeWord(String word)throws RemoteException
+	{
+		wrs.removeWord(word);
+	}
+	
+	public boolean checkWord(String word) throws RemoteException
+	{
+		return wrs.checkWord(word);
 	}
 
 
