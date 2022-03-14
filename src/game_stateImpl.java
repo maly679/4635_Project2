@@ -9,18 +9,45 @@ public class game_stateImpl extends UnicastRemoteObject implements game_state {
 	private int guessCount;
 	private int numWords;
 	private int failedAttempts;
+	private String display_phrase;
+
+	//private setDisplay_Phrase(String)
+
+	
 
 	public game_stateImpl(String name) throws RemoteException {
 		this.name = name;
+	}
+
+	public String getDisplay_phrase()
+	{
+		return this.display_phrase;
+	}
+
+	public void setDisplay_phrase(String phrase)
+	{
+		this.display_phrase = phrase;
 	}
 
 	public void setScore(int score) {
 		this.score = score;
 	}
 
+	
 	public void setPhrase() throws RemoteException {
 		WordRepositoryServer wrs = new WordRepositoryServerImpl();
 		this.phrase = wrs.getRandomWord(this.numWords);
+
+		String initialPlay ="";
+		char [] phraseChar = this.phrase.trim().toCharArray();
+		for (int i = 0; i < phraseChar.length; i ++) {
+			if(Character.isWhitespace(phraseChar[i])) {
+				initialPlay+= " ";
+			} else {
+				initialPlay+= "-";
+			}
+		}
+		setDisplay_phrase(initialPlay + "C "+this.failedAttempts);
 	}
 
 

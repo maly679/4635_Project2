@@ -1,4 +1,5 @@
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,7 +18,7 @@ public class Client {
 
 	static enum CommandName {
 		//        newAccount, getAccount, deleteAccount, deposit, withdraw, balance, quit, help, list, getNumberAccounts, getName, 
-		startGame, quit, help, getGame, getClient, endGame, getNumWords, getFailedAttempts, getPhrase;
+		startGame, quit, help, getGame, getClient, endGame, getNumWords, getFailedAttempts, getPhrase, restartGame, guessLetter,guessPhrase;
 	};
 
 	public Client(String clientname) {
@@ -64,7 +65,10 @@ public class Client {
 		int numWords = 0;
 		int failedAttempts = 0;
 		int userInputTokenNo = 1;
-
+		String token = null;
+		String entry = null;
+		
+		
 		while (tokenizer.hasMoreTokens()) {
 			switch (userInputTokenNo) {
 			case 1:
@@ -81,12 +85,16 @@ public class Client {
 
 			case 3:
 				try {
-					numWords = Integer.parseInt(tokenizer.nextToken());
+					token = tokenizer.nextToken();
+					numWords = Integer.parseInt(token);
+					
 				} catch (NumberFormatException e) {
-					System.out.println("Illegal amount");
-					return null;
+					//If the entry is in fact a guessed letter, process it as such. This is determined
+					//through encountering an exception for parsing the input as integer.
+					entry = token;
+					break;
 				}
-
+				
 			case 4:
 				try {
 					failedAttempts = Integer.parseInt(tokenizer.nextToken());
@@ -102,7 +110,7 @@ public class Client {
 			}
 			userInputTokenNo++;
 		}
-		return new Command(commandName, userName, numWords, failedAttempts);
+		return new Command(commandName, userName, numWords, failedAttempts, entry);
 	}
 
 	void execute(Command command) throws RemoteException {
@@ -154,7 +162,22 @@ public class Client {
 			System.out.println(pggs.getPhrase(clientname));
 			break;
 		case guessLetter:
-			System.out.println(pggs.guessLetter(clientname,));
+			System.out.println(pggs.guessLetter(clientname,command.getEntry().charAt(0)));
+			break;
+		case guessPhrase:
+			System.out.println(pggs.guessPhrase(clientname,command.getEntry()));
+			break;
+//		case restartGame:
+////			String phrase = pggs.getPhrase(clientname);
+//			pggs.r(userName);
+//			System.out.println("Thanks for playing! Your phrase was " + phrase);
+//			System.exit(0);
+//			break;
+		case endGame:
+			String phrase = pggs.getPhrase(clientname);
+			pggs.endGame(userName);
+			System.out.println("Thanks for playing! Your phrase was " + phrase);
+			System.exit(0);
 			break;
 		default:
 			System.out.println("Illegal command");
@@ -166,14 +189,16 @@ public class Client {
 		private String userName;
 		private int numWords;
 		private int failedAttempts;
+		private String entry;
 		private CommandName commandName;
 
 
-		public Command(Client.CommandName commandName, String userName, int numWords, int failedAttempts) {
+		public Command(Client.CommandName commandName, String userName, int numWords, int failedAttempts, String entry) {
 			this.commandName = commandName;
 			this.userName = userName;
 			this.numWords = numWords;
 			this.failedAttempts = failedAttempts;
+			this.entry = entry;
 		}
 
 		public CommandName getCommandName() {
@@ -183,7 +208,11 @@ public class Client {
 		public String getUserName() {
 			return this.userName;
 		}
-
+		
+		public String getEntry() {
+			return this.entry;
+		}
+		
 		public int getNumWords() {
 			return this.numWords;
 		}
