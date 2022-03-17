@@ -14,22 +14,22 @@ public class Client {
 	PhraseGuessingGameServer pggs;
 	game_state gs;
 	WordRepositoryServer wrs;
-	String clientname;
+	String userName;
 
 	static enum CommandName {
 		//        newAccount, getAccount, deleteAccount, deposit, withdraw, balance, quit, help, list, getNumberAccounts, getName, 
 		startGame, quit, help, getGame, getClient, endGame, getNumWords, getFailedAttempts, getPhrase, restartGame, guessLetter,guessPhrase,addWord,removeWord,checkWord;
 	};
 
-	public Client(String clientname) {
-		this.clientname = clientname;
+	public Client(String userName) {
+		this.userName = userName;
 		try {
-			pggs = (PhraseGuessingGameServer) Naming.lookup(clientname);
+			pggs = (PhraseGuessingGameServer) Naming.lookup(userName);
 		} catch (Exception e) {
 			System.out.println("The runtime failed: " + e.getMessage());
 			System.exit(0);
 		}
-		System.out.println("Connected to game: " + clientname);
+		System.out.println("Connected to game: " + userName);
 	}
 
 	public Client() {
@@ -40,7 +40,7 @@ public class Client {
 		BufferedReader consoleIn = new BufferedReader(new InputStreamReader(System.in));
 
 		while (true) {
-			System.out.print(clientname + "@" + this.clientname + ">");
+			System.out.print(this.userName + "@" + this.userName + ">");
 			try {
 				String userInput = consoleIn.readLine();
 				execute(parse(userInput));
@@ -71,14 +71,18 @@ public class Client {
 
 
 		while (tokenizer.hasMoreTokens()) {
+
 			switch (userInputTokenNo) {
+
 			case 1:
 				try {
 					String commandNameString = tokenizer.nextToken();
 					commandName = CommandName.valueOf(CommandName.class, commandNameString);
 				} catch (IllegalArgumentException commandDoesNotExist) {
 					System.out.println("Illegal command");
+
 					return null;
+
 				}
 				break;
 			case 2:
@@ -87,7 +91,7 @@ public class Client {
 			case 3:
 				try {
 					token = tokenizer.nextToken();
-					
+
 
 
 					numWords = Integer.parseInt(token);
@@ -99,21 +103,38 @@ public class Client {
 					if(commandName.toString().contains("Word"))
 					{
 						System.out.println(commandName.toString());
-						
+
 						word = token;
 						System.out.println(word);
 					}
-					else
+					else 
 					{
-					entry = token;
+						entry = token;
+
 					}
-					break;
-					
+					if (!tokenizer.hasMoreTokens()) {
+						break;
+					}
+
 				}
+
 
 			case 4:
 				try {
-					failedAttempts = Integer.parseInt(tokenizer.nextToken());
+					token = tokenizer.nextToken();
+
+					if (commandName.toString().contains("Phrase")) {
+
+						entry = entry + " " + token;
+
+						while(tokenizer.hasMoreTokens()) {
+							entry = entry + " " + tokenizer.nextToken();
+						}
+						System.out.println(entry);
+						break;
+					} else {
+						failedAttempts = Integer.parseInt(token);
+					}
 
 				} catch (NumberFormatException e) {
 					System.out.println("Illegal amount");
@@ -126,6 +147,7 @@ public class Client {
 			}
 			userInputTokenNo++;
 		}
+		System.out.println(userName);
 		return new Command(commandName, userName, numWords, failedAttempts, entry, word);
 	}
 
@@ -148,9 +170,6 @@ public class Client {
 
 		// all further commands require a name to be specified
 		String userName = command.getUserName();
-		if (userName == null) {
-			userName = clientname;
-		}
 
 		if (userName == null) {
 			System.out.println("name is not specified");
@@ -158,56 +177,81 @@ public class Client {
 		}
 
 		switch (command.getCommandName()) {
+
 		case startGame:
-			clientname = userName;
-			pggs.startGame(userName, command.getNumWords(), command.getFailedAttempts());
+			//			clientname = userName;
+			System.out.println(pggs.startGame(userName, command.getNumWords(), command.getFailedAttempts()));
 			break;
+
 		case addWord: 
-			System.out.println(command.getWord());
-			//pggs.addWord(clientname,command.getWord());
+			if (pggs.getName(userName) != null) {
+
+				pggs.addWord(userName,command.getWord());
+			} else {
+				System.out.println("Invalid username!");
+			}
 			break;
 		case removeWord:
-			pggs.removeWord(clientname,command.getWord());
+			if (pggs.getName(userName) != null) {
+
+				pggs.removeWord(userName,command.getWord());
+
+			} else {
+				System.out.println("Invalid username!");
+			}
 			break;
 		case checkWord:
-			System.out.println(pggs.checkWord(clientname, command.getWord()));
-			break;
-		case getGame:
-			System.out.println(pggs);
-			break;
-		case getClient:
-			System.out.println(pggs.getName(clientname));
-			break;
-		case getNumWords:
-			System.out.println(pggs.getNumWords(clientname));
-			break;
-		case getFailedAttempts:
-			System.out.println(pggs.getFailedAttempts(clientname));
-			break;
-		case getPhrase:
-			System.out.println(pggs.getPhrase(clientname));
+			if (pggs.getName(userName) != null) {
+
+				System.out.println(pggs.checkWord(userName, command.getWord()));
+			} else {
+				System.out.println("Invalid username!");
+			}
 			break;
 		case guessLetter:
-			System.out.println(pggs.guessLetter(clientname,command.getEntry().charAt(0)));
+
+			if (pggs.getName(userName) != null) {
+				System.out.println(pggs.guessLetter(userName,command.getEntry().charAt(0)));
+			} else {
+				System.out.println("Invalid username!");
+			}
 			break;
 		case guessPhrase:
-			System.out.println(pggs.guessPhrase(clientname,command.getEntry()));
+			if (pggs.getName(userName) != null) {
+
+				System.out.println(pggs.guessPhrase(userName,command.getEntry()));
+			} else {
+				System.out.println("Invalid username!");
+			}
 			break;
 		case restartGame:
-					String phrase = pggs.getPhrase(clientname);
-					//pggs.r(userName);
-					System.out.println("Thanks for playing! Your phrase was " + phrase);
-					//YOUR SCORE WAS: 
-					System.exit(0);
-					break;
+			if (pggs.getName(userName) != null) {
+
+				String phrase = pggs.getPhrase(userName);
+				//pggs.r(userName);
+				System.out.println("Thanks for playing! Your phrase was " + phrase);
+				//YOUR SCORE WAS: 
+				System.exit(0);
+			} else {
+				System.out.println("Invalid username!");
+			}
+			break;
 		case endGame:
-			String word = pggs.getPhrase(clientname);
-			pggs.endGame(userName);
-			System.out.println("Thanks for playing! Your phrase was " + word);
-			System.exit(0);
+			if (pggs.getName(userName) != null) {
+
+				String word = pggs.getPhrase(userName);
+				pggs.endGame(userName);
+				System.out.println("Thanks for playing! Your phrase was " + word);
+				System.exit(0);
+			} else {
+				System.out.println("Invalid username!");
+			}
 			break;
 		default:
 			System.out.println("Illegal command");
+
+
+
 		}
 
 	}
@@ -249,7 +293,7 @@ public class Client {
 		public int getFailedAttempts() {
 			return this.failedAttempts;
 		}
-		
+
 		public String getWord()
 		{
 			return this.word;
@@ -263,10 +307,10 @@ public class Client {
 			System.exit(1);
 		}
 
-		String clientname;
+		String userName;
 		if (args.length > 0) {
-			clientname = args[0];
-			new Client(clientname).run();
+			userName = args[0];
+			new Client(userName).run();
 		} else {
 			new Client().run();
 		}

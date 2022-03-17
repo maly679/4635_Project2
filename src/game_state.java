@@ -14,9 +14,10 @@ public interface game_state extends Remote {
 	public int getScore() throws RemoteException;
 	public String getPhrase() throws RemoteException;
 	public int getGuessCount() throws RemoteException;
-	public void setDisplay_phrase(String phrase) throws RemoteException;
+	public void setDisplay_phrase(String phrase, int guessCount) throws RemoteException;
 	public String getDisplay_phrase() throws RemoteException;
 	public void addWord(String word) throws RemoteException;
 	public void removeWord(String word) throws RemoteException;
+	public String getUserPhrase() throws RemoteException;
 	public boolean checkWord(String word) throws RemoteException; 
 }

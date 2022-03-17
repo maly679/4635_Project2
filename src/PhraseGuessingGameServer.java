@@ -12,7 +12,7 @@ public interface PhraseGuessingGameServer extends Remote{
 //	public String addWord() throws RemoteException;
 //	public String removeWord() throws RemoteException;
 //	public String checkWord() throws RemoteException;
-	public String getName(String client) throws RemoteException;
+	public game_state getName(String client) throws RemoteException;
 	public String getPhrase(String client) throws RemoteException;
 	public int getNumWords(String client) throws RemoteException;
 	public int getFailedAttempts(String client) throws RemoteException;
