@@ -35,7 +35,6 @@ public class WordRepositoryServerImpl extends UnicastRemoteObject implements Wor
 
 			generatedWord = generatedWord + words.get(index).toLowerCase()  + " " ;
 		}
-		System.out.println(generatedWord);
 		return generatedWord;
 	}
 	
