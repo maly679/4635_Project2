@@ -105,17 +105,19 @@ public class game_stateImpl extends UnicastRemoteObject implements game_state {
 		return this.failedAttempts;
 	}
 
-	@Override
+	// This method adds a word to the arrayList which is our wordRepo
 	public void addWord(String word) throws RemoteException {
 		wrs.addWord(word);
 
 	}
 
+	// This method removes a word from the arrayList which is our wordRepo
 	public void removeWord(String word)throws RemoteException
 	{
 		wrs.removeWord(word);
 	}
 
+	// This method checks if a word is part of the arrayList which is our wordRepo
 	public boolean checkWord(String word) throws RemoteException
 	{
 		return wrs.checkWord(word);

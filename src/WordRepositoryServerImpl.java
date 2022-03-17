@@ -66,21 +66,21 @@ public class WordRepositoryServerImpl extends UnicastRemoteObject implements Wor
 		}
 	}
 
-	@Override
+	// This method adds a word to the arrayList that holds all words in our wordRepo
 	public void addWord(String word) throws RemoteException {
 		words.add(word);
-		// System.out.println(words.toString());
+		
 		
 	}
 
-	@Override
+	// This method removes a word from the arrayList that holds all words in our wordRepo
 	public void removeWord(String word) throws RemoteException {
 		words.remove(word);
-		System.out.println(words.toString());
+		
 		
 	}
 
-	@Override
+	// This method checks if a word is in the arrayList that holds all words in our wordRepo
 	public boolean checkWord(String word) throws RemoteException {
 		return words.contains(word);
 	}

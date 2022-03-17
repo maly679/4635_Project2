@@ -139,24 +139,7 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 		return prompt;
 	}
 
-	//	@Override
-	//	public String addWord() throws RemoteException {
-	//		// TODO Auto-generated method stub
-	//		return null;
-	//	}
-	//
-	//	@Override
-	//	public String removeWord() throws RemoteException {
-	//		// TODO Auto-generated method stub
-	//		return null;
-	//	}
-	//
-	//	@Override
-	//	public String checkWord() throws RemoteException {
-	//		// TODO Auto-generated method stub
-	//		return null;
-	//	}
-	//	
+	
 	@Override
 	public synchronized game_state getName(String client) throws RemoteException  {
 		return game_states.get(client);
@@ -192,19 +175,20 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 		return game_states.get(client).getScore();
 	}
 
-	@Override
+	// This method calls the method in game_states that is responsible for adding a word to the wordRepo
 	public void addWord(String client, String word) throws RemoteException {
 		
 		
 		game_states.get(client).addWord(word);
 	}
 	
+	// This method calls the method in game_states that is responsible for removing a word from the wordRepo
 	public void removeWord(String client, String word) throws RemoteException
 	{
 		game_states.get(client).removeWord(word);
 	}
 
-	@Override
+	// This method calls the method in game_states that is responsible for checking if a word is in the wordRepo
 	public boolean checkWord(String client, String word) throws RemoteException {
 		return game_states.get(client).checkWord(word);
 	}

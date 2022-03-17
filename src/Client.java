@@ -102,10 +102,10 @@ public class Client {
 					//System.out.println(commandName.toString());
 					if(commandName.toString().contains("Word"))
 					{
-						System.out.println(commandName.toString());
+						// System.out.println(commandName.toString());
 
 						word = token;
-						System.out.println(word);
+						// System.out.println(word);
 					}
 					else 
 					{
