@@ -1,3 +1,8 @@
+/****
+ * COMP 4635 Project 2
+ * @author Mohamed A, Erik S, Chad K
+ */
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;

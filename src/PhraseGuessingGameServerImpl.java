@@ -1,3 +1,9 @@
+/****
+ * COMP 4635 Project 2
+ * @author Mohamed A, Erik S, Chad K
+ */
+
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;

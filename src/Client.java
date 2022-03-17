@@ -1,4 +1,7 @@
-
+/****
+ * COMP 4635 Project 2
+ * @author Mohamed A, Erik S, Chad K
+ */
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,7 +11,7 @@ import java.rmi.RemoteException;
 import java.util.StringTokenizer;
 
 public class Client {
-	private static final String USAGE = "java Client <game_url> <client_name>";
+	private static final String USAGE = "java Client <game_url>";
 	private static final String DEFAULT_CLIENT_NAME = "generic";
 
 	PhraseGuessingGameServer pggs;
@@ -16,11 +19,12 @@ public class Client {
 	WordRepositoryServer wrs;
 	String userName;
 
+	//Possible commands for game
 	static enum CommandName {
-		//        newAccount, getAccount, deleteAccount, deposit, withdraw, balance, quit, help, list, getNumberAccounts, getName, 
-		startGame, quit, help, getGame, getClient, endGame, getNumWords, getFailedAttempts, getPhrase, restartGame, guessLetter,guessPhrase,addWord,removeWord,checkWord;
+		startGame, quit, help, endGame, restartGame, guessLetter, guessPhrase, addWord, removeWord, checkWord;
 	};
 
+	//Instantiate Client
 	public Client(String userName) {
 		this.userName = userName;
 		try {
@@ -60,6 +64,7 @@ public class Client {
 			return null;
 		}
 
+		//Base variables for client program logic
 		CommandName commandName = null;
 		String userName = null;
 		int numWords = 0;
@@ -86,26 +91,20 @@ public class Client {
 				}
 				break;
 			case 2:
+				//Process userName..
 				userName = tokenizer.nextToken();
 
 			case 3:
 				try {
 					token = tokenizer.nextToken();
-
-
-
 					numWords = Integer.parseInt(token);
 
 				} catch (NumberFormatException e) {
-					//If the entry is in fact a guessed letter, process it as such. This is determined
-					//through encountering an exception for parsing the input as integer.
-					//System.out.println(commandName.toString());
+					//If the entry is in fact a guessed letter, or a word operation, process it as such. 
+					//This is determined through encountering an exception for parsing the input as integer.
 					if(commandName.toString().contains("Word"))
 					{
-						// System.out.println(commandName.toString());
-
 						word = token;
-						// System.out.println(word);
 					}
 					else 
 					{
@@ -118,7 +117,7 @@ public class Client {
 
 				}
 
-
+			//Manage other possibilities of 4 tokens through some logic.
 			case 4:
 				try {
 					token = tokenizer.nextToken();
@@ -155,20 +154,8 @@ public class Client {
 		if (command == null) {
 			return;
 		}
-
-		switch (command.getCommandName()) {
-
-		case quit:
-			System.exit(0);
-		case help:
-			for (CommandName commandName : CommandName.values()) {
-				System.out.println(commandName);
-			}
-			return;
-
-		}
-
-		// all further commands require a name to be specified
+		
+		// all further commands require a userName to be specified
 		String userName = command.getUserName();
 
 		if (userName == null) {
@@ -176,10 +163,10 @@ public class Client {
 			return;
 		}
 
+		//Main case for game flow
 		switch (command.getCommandName()) {
 
 		case startGame:
-			//			clientname = userName;
 			System.out.println(pggs.startGame(userName, command.getNumWords(), command.getFailedAttempts()));
 			break;
 
@@ -250,12 +237,11 @@ public class Client {
 		default:
 			System.out.println("Illegal command");
 
-
-
 		}
 
 	}
 
+	//Command parsing
 	private class Command {
 		private String userName;
 		private int numWords;
