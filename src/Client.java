@@ -197,6 +197,7 @@ public class Client {
 					String phrase = pggs.getPhrase(clientname);
 					//pggs.r(userName);
 					System.out.println("Thanks for playing! Your phrase was " + phrase);
+					//YOUR SCORE WAS: 
 					System.exit(0);
 					break;
 		case endGame:

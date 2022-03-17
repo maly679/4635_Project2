@@ -30,37 +30,57 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 	
 	@Override
 	public String guessLetter(String player, char letter) throws RemoteException {
+		
 		String phrase;
 		phrase = game_states.get(player).getPhrase();
 		boolean found = false;
 		String display_phrase = "";
 		display_phrase = game_states.get(player).getDisplay_phrase();
 		char[] blankChar = display_phrase.toCharArray();
-		int failedAttempts = game_states.get(player).getFailedAttempts();
-		
+		int guessCount = game_states.get(player).getGuessCount();
+		int score ;
 		System.out.println(phrase);
 		for(int i=0;i<phrase.length();i++)
 		{
 		if(phrase.charAt(i) == letter)
-		{
-
+		{//Checks if letter was already previously guessed.
+			if(game_states.get(player).getDisplay_phrase().indexOf(letter) == -1)
+			{
+				
 			blankChar[i] = letter;
 			display_phrase = String.valueOf(blankChar);
-			game_states.get(player).setDisplay_phrase(display_phrase);
-			
-			int score = game_states.get(player).getScore();
-			game_states.get(player).setScore(score + 10);
 			
 			found = true;
 			
+			game_states.get(player).setDisplay_phrase(display_phrase);
+		
+			score = game_states.get(player).getScore();
+			game_states.get(player).setScore(score + 10);
+			
+			return display_phrase;
+			}
+			else
+			{
+				String item_error = "Letter already guessed";
+				return item_error;
+			}
+			
 		}
 	}
+		
+		//System.out.println("Score for this game is: " + game_states.get(player).getScore());
 		if (found == false)
 		{
-				
-		game_states.get(player).setFailedAttempts(failedAttempts - 1);
-
+		game_states.get(player).setGuessCount(guessCount - 1);
+		
+		
+			if(game_states.get(player).getGuessCount() <= 0 )
+			{
+				return restartGame(player);
+			}
+		
 		}
+	
 		return display_phrase;
 	}
 
@@ -71,16 +91,22 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 		String phrase_fixed = phrase.substring(0,word.length());
 		
 		if(word.equals(phrase_fixed) ){
+			
 			int score = game_states.get(player).getScore();
 			game_states.get(player).setScore(score + 100);
 			
-			return phrase;
+			String victory = "You won! Score for this game is: " + game_states.get(player).getScore();
+			return victory;
 		}
 		else
 		{
-			int failedAttempts = game_states.get(player).getFailedAttempts();
-			game_states.get(player).setFailedAttempts(failedAttempts - 1);
-	
+			int guessCount = game_states.get(player).getGuessCount();
+			game_states.get(player).setFailedAttempts(guessCount - 1);
+			
+			if(game_states.get(player).getGuessCount() <= 0 )
+			{
+				restartGame(player);
+			}
 			
 			return player;	
 		}
@@ -91,7 +117,7 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 	//Ends the game removing the player game id from the hashmap pernamently
 	public String endGame(String player) throws RemoteException {
 
-	System.out.println("Game ending, your score is: ");   //how to access score 
+	System.out.println("Game ending, your score is: " + game_states.get(player).getScore());   //how to access score 
 	game_states.remove(player);
 		return null;
 	}
@@ -100,14 +126,16 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 	//Restarts the players game, with a new word keeping the same lives.
 	public String restartGame(String player) throws RemoteException {
 		
-		int guesses = 1;
-		game_states.get(player).setPhrase();	
-		game_states.get(player).setFailedAttempts(guesses);
+		int failedAttempts = game_states.get(player).getFailedAttempts();	
+		int numWords = game_states.get(player).getNumWords();
 		
-		System.out.println("new phrase for player: " + game_states.get(player) + " phrase: " + game_states.get(player).getPhrase()
-				+ "with failed attempts: " + game_states.get(player).getFailedAttempts());
-		
-		return null;
+		game_states.get(player).setGuessCount(failedAttempts * numWords);
+		game_states.get(player).setNumWords(numWords);
+		game_states.get(player).setPhrase();
+		game_states.get(player).setDisplay_phrase(game_states.get(player).getPhrase());
+		game_states.get(player).setScore(0);
+		String prompt = "Restarting game with "+ failedAttempts + " guesses and " + numWords +" new words";
+		return prompt;
 	}
 
 	//	@Override

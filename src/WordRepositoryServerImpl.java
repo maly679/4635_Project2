@@ -17,26 +17,6 @@ public class WordRepositoryServerImpl extends UnicastRemoteObject implements Wor
 
 	ArrayList<String> words = new ArrayList<>();
 	
- 
-
-//	@Override
-//	public boolean createWord(String word) throws RemoteException {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean removeWord(String word) throws RemoteException {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean checkWord(String word) throws RemoteException {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-
 	public String getRandomWord(int length) throws RemoteException {
 		// TODO Auto-generated method stub
 		if (words.size() == 0) {
