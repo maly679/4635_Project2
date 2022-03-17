@@ -68,7 +68,6 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 			
 		}
 	}
-		
 		//System.out.println("Score for this game is: " + game_states.get(player).getScore());
 		if (!found)
 		{
@@ -178,7 +177,7 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 	// This method calls the method in game_states that is responsible for adding a word to the wordRepo
 	public void addWord(String client, String word) throws RemoteException {
 		
-		
+
 		game_states.get(client).addWord(word);
 	}
 	
