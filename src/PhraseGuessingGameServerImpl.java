@@ -36,7 +36,7 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 		String display_phrase = "";
 		display_phrase = game_states.get(player).getDisplay_phrase();
 		char[] blankChar = display_phrase.toCharArray();
-		
+		int failedAttempts = game_states.get(player).getFailedAttempts();
 		
 		System.out.println(phrase);
 		for(int i=0;i<phrase.length();i++)
@@ -55,15 +55,12 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 			
 		}
 	}
-		
 		if (found == false)
 		{
-				int failedAttempts = game_states.get(player).getFailedAttempts();
+				
 		game_states.get(player).setFailedAttempts(failedAttempts - 1);
 
 		}
-		
-		System.out.println(display_phrase);
 		return display_phrase;
 	}
 
@@ -87,22 +84,29 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 			
 			return player;	
 		}
-
 		
 	}
 
 	@Override
+	//Ends the game removing the player game id from the hashmap pernamently
 	public String endGame(String player) throws RemoteException {
 
-	//	System.out.println("Game ending, your score is: ")   //how to access score 
-	//remove from hashmap
+	System.out.println("Game ending, your score is: ");   //how to access score 
+	game_states.remove(player);
 		return null;
 	}
 
 	@Override
+	//Restarts the players game, with a new word keeping the same lives.
 	public String restartGame(String player) throws RemoteException {
-		//	System.out.println("Game ending, your score is: ")   //how to access score 
-		//Set fields of player to 0. call start game
+		
+		int guesses = 1;
+		game_states.get(player).setPhrase();	
+		game_states.get(player).setFailedAttempts(guesses);
+		
+		System.out.println("new phrase for player: " + game_states.get(player) + " phrase: " + game_states.get(player).getPhrase()
+				+ "with failed attempts: " + game_states.get(player).getFailedAttempts());
+		
 		return null;
 	}
 

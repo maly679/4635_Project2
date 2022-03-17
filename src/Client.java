@@ -193,16 +193,16 @@ public class Client {
 		case guessPhrase:
 			System.out.println(pggs.guessPhrase(clientname,command.getEntry()));
 			break;
-			//		case restartGame:
-			////			String phrase = pggs.getPhrase(clientname);
-			//			pggs.r(userName);
-			//			System.out.println("Thanks for playing! Your phrase was " + phrase);
-			//			System.exit(0);
-			//			break;
+		case restartGame:
+					String phrase = pggs.getPhrase(clientname);
+					//pggs.r(userName);
+					System.out.println("Thanks for playing! Your phrase was " + phrase);
+					System.exit(0);
+					break;
 		case endGame:
-			String phrase = pggs.getPhrase(clientname);
+			String word = pggs.getPhrase(clientname);
 			pggs.endGame(userName);
-			System.out.println("Thanks for playing! Your phrase was " + phrase);
+			System.out.println("Thanks for playing! Your phrase was " + word);
 			System.exit(0);
 			break;
 		default:

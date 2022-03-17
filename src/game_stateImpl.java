@@ -37,8 +37,6 @@ public class game_stateImpl extends UnicastRemoteObject implements game_state {
 	
 	public void setPhrase() throws RemoteException {
 		
-		
-		
 		this.phrase = wrs.getRandomWord(this.numWords);
 
 		String initialPlay ="";
@@ -50,7 +48,7 @@ public class game_stateImpl extends UnicastRemoteObject implements game_state {
 				initialPlay+= "-";
 			}
 		}
-		setDisplay_phrase(initialPlay + "C "+this.failedAttempts);
+		setDisplay_phrase(initialPlay + "C "+ this.failedAttempts);
 	}
 
 	
