@@ -14,14 +14,17 @@ import java.util.ArrayList;
 public class WordRepositoryServerImpl extends UnicastRemoteObject implements WordRepositoryServer  {
 	
 
-
+	// default constructor for initalizing the WordRepo
 	protected WordRepositoryServerImpl() throws RemoteException {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	ArrayList<String> words = new ArrayList<>();
+	ArrayList<String> words = new ArrayList<>(); // declaring global arrayList
 	
+	/* This method generates a random word from the words arrayList
+		For the person playing the game to guess
+	*/
 	public String getRandomWord(int length) throws RemoteException {
 		// TODO Auto-generated method stub
 		if (words.size() == 0) {
@@ -38,6 +41,8 @@ public class WordRepositoryServerImpl extends UnicastRemoteObject implements Wor
 		return generatedWord;
 	}
 	
+	/* This method goes through and populates the words arrayList from the text file
+	*/
 	public void populateWords() throws RemoteException {
 		BufferedReader bufReader = null;
 		try {
