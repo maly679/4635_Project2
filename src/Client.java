@@ -93,7 +93,7 @@ public class Client {
 			case 2:
 				//Process userName..
 				userName = tokenizer.nextToken();
-
+				break;
 			case 3:
 				try {
 					token = tokenizer.nextToken();
@@ -146,7 +146,7 @@ public class Client {
 			}
 			userInputTokenNo++;
 		}
-		System.out.println(userName);
+		//System.out.println(userName); prints the username every time probably dont want this.
 		return new Command(commandName, userName, numWords, failedAttempts, entry, word);
 	}
 
@@ -205,31 +205,23 @@ public class Client {
 			break;
 		case guessPhrase:
 			if (pggs.getName(userName) != null) {
-
 				System.out.println(pggs.guessPhrase(userName,command.getEntry()));
-			} else {
+			} 
+			else {
 				System.out.println("Invalid username!");
 			}
 			break;
 		case restartGame:
 			if (pggs.getName(userName) != null) {
 
-				String phrase = pggs.getPhrase(userName);
-				//pggs.r(userName);
-				System.out.println("Thanks for playing! Your phrase was " + phrase);
-				//YOUR SCORE WAS: 
-				System.exit(0);
+				System.out.println(pggs.restartGame(userName));
 			} else {
 				System.out.println("Invalid username!");
 			}
 			break;
 		case endGame:
 			if (pggs.getName(userName) != null) {
-
-				String word = pggs.getPhrase(userName);
-				pggs.endGame(userName);
-				System.out.println("Thanks for playing! Your phrase was " + word);
-				System.exit(0);
+				System.out.println(pggs.endGame(userName));
 			} else {
 				System.out.println("Invalid username!");
 			}
@@ -238,7 +230,6 @@ public class Client {
 			System.out.println("Illegal command");
 
 		}
-
 	}
 
 	//Command parsing

@@ -43,14 +43,14 @@ public class WordRepositoryServerImpl extends UnicastRemoteObject implements Wor
 		try {
 			bufReader = new BufferedReader(new FileReader("../words.txt"));
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
+			
 			e1.printStackTrace();
 		} 
 		String line = null;
 		try {
 			line = bufReader.readLine();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} 
 		while (line != null) { 
@@ -58,14 +58,14 @@ public class WordRepositoryServerImpl extends UnicastRemoteObject implements Wor
 		try {
 			line = bufReader.readLine();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		}
 		}
 		try {
 			bufReader.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		}
 	}
