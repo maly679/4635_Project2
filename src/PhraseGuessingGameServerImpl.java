@@ -62,10 +62,9 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 			found = true;
 			//Update the display phrase replacing the blank with the correct letter
 			game_states.get(player).setDisplay_phrase(display_phrase, game_states.get(player).getGuessCount());
-			//Each correct letter gives 10 points
+			//Each correct letter guess gives 10 points
 			score = game_states.get(player).getScore();
 			game_states.get(player).setScore(score + 10);
-			
 			return game_states.get(player).getUserPhrase();
 			}
 			else
@@ -78,8 +77,9 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 	}
 		if (!found)
 		{
-			
+		//Lower remaining guess count by 1
 		game_states.get(player).setGuessCount(game_states.get(player).getGuessCount() - 1);
+		//Show how many lives are left next to the current display phrase
 		game_states.get(player).setDisplay_phrase(game_states.get(player).getDisplay_phrase(), game_states.get(player).getGuessCount());
 		if(game_states.get(player).getGuessCount() <= 0 )
 			{
@@ -92,9 +92,10 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 	}
 
 	@Override
+	//Guess the phrase for a specific game
 	public String guessPhrase(String player, String word) throws RemoteException {
-		
-		String phrase = game_states.get(player).getPhrase().trim(); //not sure if it works way i think it does.
+		//Phrase needs to be trimmed for .equals to work with the phrase
+		String phrase = game_states.get(player).getPhrase().trim(); 
 		if(word.trim().equals(phrase) ){
 			
 			int score = game_states.get(player).getScore();
@@ -121,8 +122,10 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 	@Override
 	//Ends the game removing the player game id from the hashmap pernamently
 	public String endGame(String player) throws RemoteException {
+	
 	String prompt = "Game ending, your score is: " + game_states.get(player).getScore() + "\n";
 	prompt += "Phrase was: " + game_states.get(player).getPhrase();
+	//remove game id from hashmap
 	game_states.remove(player);
 		return prompt;
 	}
@@ -130,10 +133,11 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 	@Override
 	//Restarts the players game, with a new word keeping the same lives.
 	public String restartGame(String player) throws RemoteException {
-		
+		//get failed attempts and games from the current game id
 		int failedAttempts = game_states.get(player).getFailedAttempts();	
 		int numWords = game_states.get(player).getNumWords();
 		String prompt = "Phrase was: " + game_states.get(player).getPhrase() + "\n";
+		//make new game with the same origonal inputs of the game id 
 		game_states.get(player).setGuessCount(failedAttempts * numWords);
 		game_states.get(player).setNumWords(numWords);
 		game_states.get(player).setPhrase();

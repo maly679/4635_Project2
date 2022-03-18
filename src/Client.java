@@ -146,7 +146,7 @@ public class Client {
 			}
 			userInputTokenNo++;
 		}
-		//System.out.println(userName); prints the username every time probably dont want this.
+		
 		return new Command(commandName, userName, numWords, failedAttempts, entry, word);
 	}
 
