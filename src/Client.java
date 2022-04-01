@@ -9,12 +9,13 @@ import java.io.InputStreamReader;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 
-public class Client {
+public class Client implements Runnable{
 	private static final String USAGE = "java Client <game_url>";
 	private static final String DEFAULT_CLIENT_NAME = "generic";
-
-	PhraseGuessingGameServer pggs;
+	private static final int TIMELIMIT_SECONDS = 5;
+	static PhraseGuessingGameServer pggs;
 	game_state gs;
 	WordRepositoryServer wrs;
 	String userName;
@@ -29,6 +30,9 @@ public class Client {
 		this.userName = userName;
 		try {
 			pggs = (PhraseGuessingGameServer) Naming.lookup(userName);
+			pggs.keepMyNameWhileAlive(userName);
+
+	
 		} catch (Exception e) {
 			System.out.println("The runtime failed: " + e.getMessage());
 			System.exit(0);
@@ -48,6 +52,17 @@ public class Client {
 			try {
 				String userInput = consoleIn.readLine();
 				execute(parse(userInput));
+				
+		
+					try {
+						TimeUnit.SECONDS.sleep(TIMELIMIT_SECONDS);
+						pggs.heartBeat(userName);
+					} catch (Exception e) {
+						e.printStackTrace();
+						break;
+					}
+				
+				
 			} catch (Exception re) {
 				System.out.println(re);
 			}
@@ -278,16 +293,21 @@ public class Client {
 
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws RemoteException {
 		if ((args.length > 1) || (args.length > 0 && args[0].equals("-h"))) {
 			System.out.println(USAGE);
 			System.exit(1);
 		}
 
 		String userName;
+		
+
 		if (args.length > 0) {
 			userName = args[0];
-			new Client(userName).run();
+			
+			// Create a thread to send heart-beats to the server
+			(new Thread(new Client(userName))).start();
+//			new Client(userName).run();
 		} else {
 			new Client().run();
 		}

@@ -6,7 +6,12 @@
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implements PhraseGuessingGameServer {
 	/**
@@ -14,7 +19,7 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 	 */
 	private static final long serialVersionUID = 1L;
 	HashMap<String, game_state> game_states = new HashMap<String, game_state>();
-	
+	private static final int TIMELIMIT_SECONDS = 10;
 	String clientname;
 	public PhraseGuessingGameServerImpl(String clientname) throws RemoteException {
 		super();
@@ -22,6 +27,37 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 		
 	}
 
+	public void main() throws RemoteException, InterruptedException {
+		while (true) {
+			TimeUnit.SECONDS.sleep(TIMELIMIT_SECONDS);
+			System.out.print("Prunning the HashMap...");
+		    Iterator<Map.Entry<String, game_state>> it = (Iterator<Entry<String, game_state>>) game_states.entrySet();
+		    if (it == null || it.hasNext() == false) {
+		    	System.out.println(" nothing to do yet!");
+		    	continue;
+		    }
+	    	int cntAlive = 0, cntDead = 0;
+	    	ArrayList<String> removeList = new ArrayList<>();
+		    while (it.hasNext()) {
+		        Map.Entry<String, game_state> pair = it.next();
+		        String name = pair.getKey();
+		        game_state r = pair.getValue();
+		        if (((game_stateImpl) r).getIsActive()) {
+		        	((game_stateImpl) r).setIsActive(false);
+		        	cntAlive++;
+		        }		        
+		        else {
+		        	removeList.add(name);
+		        	cntDead++;
+		        }
+		    }
+		    for (String name:removeList)
+		    	game_states.remove(name);
+	        System.out.println("Removed " + cntDead + ", " + cntAlive + " still alive!");
+		}
+		
+	}
+	
 	@Override
 	/*Initializes a new game with user input of the game name, number of words and attempts per word 
 	Creates a new game state and puts it into the hashmap*/
@@ -144,6 +180,22 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 		prompt += "Score was: " + Integer.toString(game_states.get(player).getScore());
 		prompt += "\nRestarting game with "+ failedAttempts + " guesses and " + numWords +" new words" + "\n" + game_states.get(player).getUserPhrase();
 		return prompt;
+	}
+	
+	
+	public synchronized boolean heartBeat(String name) throws RemoteException {
+		game_state r = game_states.get(name);
+		if (r != null) {
+			((game_stateImpl) r).setIsActive(true);
+		}
+		return false;
+	}
+	
+	public synchronized void keepMyNameWhileAlive(String name) throws RemoteException {
+		// If the record for this client does not exist, create and add record
+		if (!game_states.containsKey(name)) {
+			game_states.put(name, new game_stateImpl(name));
+		}
 	}
 
 	@Override

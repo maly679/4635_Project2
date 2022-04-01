@@ -5,6 +5,7 @@
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.Timestamp;
 
 public class game_stateImpl extends UnicastRemoteObject implements game_state {
 
@@ -16,17 +17,28 @@ public class game_stateImpl extends UnicastRemoteObject implements game_state {
 	private int failedAttempts;
 	private String display_phrase;
 	public String user_phrase;
+	private Boolean isActive;
+	private Timestamp registeredSince;
 	WordRepositoryServer wrs = new WordRepositoryServerImpl();
 
 	//instantiate a new game_state
 	public game_stateImpl(String name) throws RemoteException {
 		this.name = name;
+		isActive = true;
+		registeredSince = new Timestamp(System.currentTimeMillis());		
 	}
 
 	//get the actual words
 	public String getDisplay_phrase()
 	{
 		return this.display_phrase;
+	}
+	
+	public synchronized Boolean getIsActive() throws RemoteException {
+		return isActive;
+	}
+	public synchronized void setIsActive(Boolean isActive) throws RemoteException {
+		this.isActive = isActive;
 	}
 
 	//get the phrase displayed to the user

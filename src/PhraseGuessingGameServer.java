@@ -17,4 +17,6 @@ public interface PhraseGuessingGameServer extends Remote{
 	public void addWord(String client, String word) throws RemoteException;
 	public void removeWord(String client,String word)throws RemoteException;
 	public boolean checkWord(String client,String word) throws RemoteException;
+	public boolean heartBeat(String player) throws RemoteException;
+	public void keepMyNameWhileAlive(String name) throws RemoteException;
 }
