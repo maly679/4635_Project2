@@ -60,10 +60,14 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 		
 	}
 	
+	//To do
+	//need to add synchronized to avoid race condition so they run once at a time for any method altering the HashMap or its data stored
+	//for game states. need to understand who is accessing them simultaneously.
+	
 	@Override
 	/*Initializes a new game with user input of the game name, number of words and attempts per word 
 	Creates a new game state and puts it into the hashmap*/
-	public String startGame(String player, int number_of_words, int failed_attempt_factor) throws RemoteException {
+	 public synchronized String startGame(String player, int number_of_words, int failed_attempt_factor) throws RemoteException {
 		
 		game_state gs = new game_stateImpl(player);
 		gs.setNumWords(number_of_words);
@@ -71,6 +75,19 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 		gs.setPhrase();
 		game_states.put(player, gs);
 		return gs.getUserPhrase();
+	}
+	
+	public Iterator<Map.Entry<String, game_state>> getEntrySet() {
+		return this.game_states.entrySet().iterator();
+	}
+	
+	public synchronized void setGameStates(HashMap<String, game_state> game_states) {
+		this.game_states = game_states;
+	}
+	
+	public synchronized void removeEntry(String name) {
+		game_states.remove(name);
+
 	}
 	
 	@Override
