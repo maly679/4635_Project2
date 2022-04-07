@@ -18,7 +18,7 @@ public class Client implements Runnable{
 	static PhraseGuessingGameServer pggs;
 	game_state gs;
 	WordRepositoryServer wrs;
-	String userName;
+	public String userName;
 
 	//Possible commands for game
 	static enum CommandName {
@@ -28,7 +28,10 @@ public class Client implements Runnable{
 	//Instantiate Client
 	public Client(String userName) {
 		this.userName = userName;
+		
+		
 		try {
+			
 			pggs = (PhraseGuessingGameServer) Naming.lookup(userName);
 			pggs.keepMyNameWhileAlive(userName);
 
@@ -45,14 +48,12 @@ public class Client implements Runnable{
 	}
 
 	public void run() {
-		BufferedReader consoleIn = new BufferedReader(new InputStreamReader(System.in));
 
 		while (true) {
-			System.out.print(this.userName + "@" + this.userName + ">");
 			try {
-				String userInput = consoleIn.readLine();
-				execute(parse(userInput));
-				
+//				String userInput = consoleIn.readLine();
+//				execute(parse(userInput));
+//				
 		
 					try {
 						TimeUnit.SECONDS.sleep(TIMELIMIT_SECONDS);
@@ -300,16 +301,46 @@ public class Client implements Runnable{
 		}
 
 		String userName;
-		
+		Client thisClient;
 
 		if (args.length > 0) {
 			userName = args[0];
 			
 			// Create a thread to send heart-beats to the server
-			(new Thread(new Client(userName))).start();
+			
+		 thisClient = new Client(userName);
+		
+			(new Thread(thisClient)).start();
 //			new Client(userName).run();
 		} else {
-			new Client().run();
+			 thisClient = new Client();
+			(new Thread(thisClient)).start();
+
+		}
+		while (true) {
+
+			System.out.print(thisClient.userName + "@" + thisClient.userName + ">");
+			try {
+				BufferedReader consoleIn = new BufferedReader(new InputStreamReader(System.in));
+
+				String userInput = consoleIn.readLine();
+				thisClient.execute(thisClient.parse(userInput));
+				
+		
+////					try {
+//						TimeUnit.SECONDS.sleep(TIMELIMIT_SECONDS);
+//						pggs.heartBeat(userName);
+////					} catch (Exception e) {
+//						e.printStackTrace();
+//						break;
+//					}
+//				
+				
+			} catch (Exception re) {
+				System.out.println(re);
+			}
 		}
 	}
+	
+	
 }
