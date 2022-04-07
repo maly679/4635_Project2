@@ -29,9 +29,11 @@ public class PhraseGuessingGameServerImpl extends UnicastRemoteObject  implement
 
 	public void main() throws RemoteException, InterruptedException {
 		while (true) {
+			
 			TimeUnit.SECONDS.sleep(TIMELIMIT_SECONDS);
 			System.out.print("Prunning the HashMap...");
-		    Iterator<Map.Entry<String, game_state>> it = (Iterator<Entry<String, game_state>>) game_states.entrySet();
+		    @SuppressWarnings("unchecked")
+			Iterator<Map.Entry<String, game_state>> it = (Iterator<Entry<String, game_state>>) game_states.entrySet();
 		    if (it == null || it.hasNext() == false) {
 		    	System.out.println(" nothing to do yet!");
 		    	continue;
