@@ -18,6 +18,7 @@ public class game_stateImpl extends UnicastRemoteObject implements game_state {
 	private String display_phrase;
 	public String user_phrase;
 	private Boolean isActive;
+	//Keep track of date registered
 	private Timestamp registeredSince;
 	WordRepositoryServer wrs = new WordRepositoryServerImpl();
 
@@ -25,6 +26,7 @@ public class game_stateImpl extends UnicastRemoteObject implements game_state {
 	public game_stateImpl(String name) throws RemoteException {
 		this.name = name;
 		isActive = true;
+		//Sets 
 		registeredSince = new Timestamp(System.currentTimeMillis());		
 	}
 
@@ -34,6 +36,7 @@ public class game_stateImpl extends UnicastRemoteObject implements game_state {
 		return this.display_phrase;
 	}
 	
+	//Returns if a 
 	public synchronized Boolean getIsActive() throws RemoteException {
 		return isActive;
 	}

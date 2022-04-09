@@ -326,15 +326,6 @@ public class Client implements Runnable{
 				String userInput = consoleIn.readLine();
 				thisClient.execute(thisClient.parse(userInput));
 				
-		
-////					try {
-//						TimeUnit.SECONDS.sleep(TIMELIMIT_SECONDS);
-//						pggs.heartBeat(userName);
-////					} catch (Exception e) {
-//						e.printStackTrace();
-//						break;
-//					}
-//				
 				
 			} catch (Exception re) {
 				System.out.println(re);

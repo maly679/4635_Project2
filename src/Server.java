@@ -39,11 +39,12 @@ public class Server {
 	}
 
 	public static void main(String[] args) throws RemoteException, InterruptedException {
+		//If user enters -h exit program
 		if (args.length > 1 || (args.length > 0 && args[0].equalsIgnoreCase("-h"))) {
 			System.out.println(USAGE);
 			System.exit(1);
 		}
-
+		//Set name of client game to be user input or "Game"
 		String clientname;
 		if (args.length > 0) {
 			clientname = args[0];
@@ -54,11 +55,13 @@ public class Server {
 		Server thisServer = new Server(clientname);
 
 		while (true) {
-
+			
 			TimeUnit.SECONDS.sleep(TIMELIMIT_SECONDS);
 			System.out.print("Prunning the HashMap...");
 			@SuppressWarnings("unchecked")
+			//Iterates through the hashmap to check on current active games
 			Iterator<Map.Entry<String, game_state>> it =  thisServer.pggs.getEntrySet();
+			//If no games currently being played
 			if (it == null || it.hasNext() == false) {
 				System.out.println(" nothing to do yet!");
 				continue;
@@ -66,6 +69,7 @@ public class Server {
 			int cntAlive = 0, cntDead = 0;
 			ArrayList<String> removeList = new ArrayList<>();
 			while (it.hasNext()) {
+				//Iterate through hashmap, if game is no longer active add to remove list
 				Map.Entry<String, game_state> pair = it.next();
 				String name = pair.getKey();
 				game_state r = pair.getValue();
